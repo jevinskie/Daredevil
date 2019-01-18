@@ -28,12 +28,12 @@
  * des_switch is only used by DES
  */
 template <class TypeGuess>
-int construct_guess (TypeGuess ***guess, uint32_t alg, Matrix *m, uint32_t n_m, uint32_t bytenum, uint32_t R, uint32_t des_switch, uint32_t * sbox, uint32_t n_keys, int8_t bit) {
+int construct_guess (TypeGuess ***guess, uint32_t alg, Matrix *m, uint32_t n_m, uint32_t bytenum, uint32_t R, uint32_t des_switch, uint32_t * sbox, uint32_t n_keys, int8_t bit, bool ttable_idx) {
   int ret;
 
   switch (alg) {
     case ALG_AES:
-      ret = construct_guess_AES (guess, m, n_m, bytenum, R, sbox, n_keys, bit);
+      ret = construct_guess_AES (guess, m, n_m, bytenum, R, sbox, n_keys, bit, ttable_idx);
       if (ret < 0) return -1;
       break;
     case ALG_DES:
@@ -48,5 +48,5 @@ int construct_guess (TypeGuess ***guess, uint32_t alg, Matrix *m, uint32_t n_m, 
 
 }
 
-template int construct_guess (uint8_t ***guess, uint32_t alg, Matrix *m, uint32_t n_m, uint32_t bytenum, uint32_t R, uint32_t des_switch, uint32_t * sbox, uint32_t n_keys, int8_t bit);
+template int construct_guess (uint8_t ***guess, uint32_t alg, Matrix *m, uint32_t n_m, uint32_t bytenum, uint32_t R, uint32_t des_switch, uint32_t * sbox, uint32_t n_keys, int8_t bit, bool ttable_idx);
 

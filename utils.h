@@ -436,6 +436,7 @@ struct Config {
    */
   int8_t bitnum;
 
+  bool ttable_idx;
 };
 
 /* Structure used to store ALL the general and common information

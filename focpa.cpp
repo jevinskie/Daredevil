@@ -165,7 +165,7 @@ int first_order(Config & conf)
         else if (conf.key_size > 1) printf("%i%s", bit, conf.sep.c_str());
       }
 
-      res = construct_guess (&fin_conf.mat_args->guess, conf.algo, conf.guesses, conf.n_file_guess, bn, conf.round, conf.des_switch, conf.sbox, conf.total_n_keys, bit);
+      res = construct_guess (&fin_conf.mat_args->guess, conf.algo, conf.guesses, conf.n_file_guess, bn, conf.round, conf.des_switch, conf.sbox, conf.total_n_keys, bit, conf.ttable_idx);
       if (res < 0) {
         fprintf (stderr, "[ERROR] Constructing guess.\n");
         return -1;

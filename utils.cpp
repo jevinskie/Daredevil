@@ -645,6 +645,7 @@ int load_config(Config & config, const char * conf_file)
   config.bitnum = -2;
   config.complete_correct_key = NULL;
   config.original_correct_key = NULL;
+  config.ttable_idx = false;
 
   while (getline(fin, line)) {
     if (line[0] == '#'){
@@ -813,6 +814,9 @@ int load_config(Config & config, const char * conf_file)
       }
       //printf("%s %li %f\n", tmp.c_str(), tmp.size(), atof(tmp.substr(0, tmp.size() - 1).c_str()));
       config.memory = (long int)(atof(tmp.substr(0, tmp.size() - 1).c_str())*suffix);
+    } else if (line.find("ttable_idx") != string::npos) {
+      string tmp = line.substr(line.find("=") + 1);
+        config.ttable_idx = (tmp[0] == 't' ? true : false);
     }
 
   }
@@ -940,6 +944,7 @@ void print_config(Config &conf)
   else if (conf.bitnum >= 0 && conf.bitnum < 8)
     printf ("\tTarget bit number:\t %d\n", conf.bitnum);
   else conf.bitnum = -2;
+  printf ("\tT-table Indexing:\t %s\n", conf.ttable_idx ? "True" : "False");
 
   printf("\tSecret Key:\t\t ");
 

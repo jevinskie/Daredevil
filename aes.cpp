@@ -43,7 +43,7 @@ uint8_t HW32(uint32_t v)
  * the guesses for round R with the specified sbox.
  */
   template <class TypeGuess>
-int construct_guess_AES (TypeGuess ***guess, Matrix *m, uint32_t n_m, uint32_t bytenum, uint32_t R, uint32_t * sbox, uint32_t n_keys, int8_t bit) {
+int construct_guess_AES (TypeGuess ***guess, Matrix *m, uint32_t n_m, uint32_t bytenum, uint32_t R, uint32_t * sbox, uint32_t n_keys, int8_t bit, bool ttable_idx) {
   TypeGuess **mem = NULL;
   uint32_t i, j, nrows = 0;
 
@@ -72,14 +72,24 @@ int construct_guess_AES (TypeGuess ***guess, Matrix *m, uint32_t n_m, uint32_t b
     }
   }
 
+  // printf("ttable_idx: %d\n", ttable_idx);
+
   for (i=0; i < nrows; i++) {
     for (j=0; j < n_keys; j++) {
         if (bit == -1) { /* No individual bits. */
           // (*guess)[j][i] = HW ((TypeGuess) sbox[ (uint8_t) mem[i][bytenum] ^ j ]);
-          int sbox_off = (bytenum % 4) * 256;
+          int sbox_off = 0;
+          if (ttable_idx) {
+            sbox_off = (bytenum % 4) * 256;
+          }
+          // printf("sbox_off: %d\n", sbox_off);
           (*guess)[j][i] = HW32 (sbox[ sbox_off + (uint8_t) mem[i][bytenum] ^ j ]);
         } else if (bit >= 0 && bit < 8) {
-          (*guess)[j][i] = (TypeGuess) ((sbox[ (uint8_t) mem[i][bytenum] ^ j ] >> bit)&1);
+          int sbox_off = 0;
+          if (ttable_idx) {
+            sbox_off = (bytenum % 4) * 256;
+          }
+          (*guess)[j][i] = (TypeGuess) ((sbox[ sbox_off + (uint8_t) mem[i][bytenum] ^ j ] >> bit)&1);
         }
     }
   }
@@ -88,6 +98,6 @@ int construct_guess_AES (TypeGuess ***guess, Matrix *m, uint32_t n_m, uint32_t b
 }
 
 
-template int construct_guess_AES (uint8_t ***guess, Matrix *m, uint32_t n_m, uint32_t bytenum, uint32_t R, uint32_t * sbox, uint32_t n_keys, int8_t bit);
-template int construct_guess_AES ( int8_t ***guess, Matrix *m, uint32_t n_m, uint32_t bytenum, uint32_t R, uint32_t * sbox, uint32_t n_keys, int8_t bit);
+template int construct_guess_AES (uint8_t ***guess, Matrix *m, uint32_t n_m, uint32_t bytenum, uint32_t R, uint32_t * sbox, uint32_t n_keys, int8_t bit, bool ttable_idx);
+template int construct_guess_AES ( int8_t ***guess, Matrix *m, uint32_t n_m, uint32_t bytenum, uint32_t R, uint32_t * sbox, uint32_t n_keys, int8_t bit, bool ttable_idx);
 
